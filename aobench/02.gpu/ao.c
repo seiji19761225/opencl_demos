@@ -1,7 +1,7 @@
 /*
  * ao.c: aobench is originally written by Syoyo Fujita.
  * (c)2019 Seiji Nishimura
- * $Id: ao.c,v 1.1.1.1 2020/07/29 00:00:00 seiji Exp seiji $
+ * $Id: ao.c,v 1.1.1.2 2020/09/11 00:00:00 seiji Exp seiji $
  */
 
 #include <omp.h>
@@ -68,10 +68,10 @@ int main(int argc, char **argv)
 #ifdef USE_NATIVE_MATH
 	"-DUSE_NATIVE_MATH "
 #endif
-#if SIZEOF_PIXMAP_T == 3
-	"-DSIZEOF_PIXMAP_T=3";
+#if SIZEOF_PIXEL_T == 3
+	"-DSIZEOF_PIXEL_T=3";
 #else
-	"-DSIZEOF_PIXMAP_T=4";
+	"-DSIZEOF_PIXEL_T=4";
 #endif
 
     // initialize OpenCL
