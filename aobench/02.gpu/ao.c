@@ -1,10 +1,9 @@
 /*
  * ao.c: aobench is originally written by Syoyo Fujita.
  * (c)2019 Seiji Nishimura
- * $Id: ao.c,v 1.1.1.2 2020/09/11 00:00:00 seiji Exp seiji $
+ * $Id: ao.c,v 1.1.1.3 2020/09/14 00:00:00 seiji Exp seiji $
  */
 
-#include <omp.h>
 #include <stdio.h>
 #include <wtime.h>
 #include <stdlib.h>
