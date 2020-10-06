@@ -110,6 +110,9 @@ int main(int argc, char **argv)
     // memory deallocation on GPU
     clReleaseMemObject(dev_image);
 
+    // unload GPU kernel
+    clReleaseKernel(kernel);
+
     // finalize OpenCL
     cl_fin(obj);
 

@@ -7,7 +7,7 @@
 CC	= gcc
 CFLAGS	= -O3 -fopenmp -std=gnu99
 
-PFLAGS	=
+PFLAGS	= -DCL_TARGET_OPENCL_VERSION=120
 LIBS	=
 LIBOCL	= -lOpenCL
 #------------------------------------------------------------------------

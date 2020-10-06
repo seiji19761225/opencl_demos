@@ -135,6 +135,9 @@ int main(int argc, char **argv)
     clReleaseMemObject(dev_plane);
     clReleaseMemObject(dev_spheres);
 
+    // unload GPU kernel
+    clReleaseKernel(kernel);
+
     // finalize OpenCL
     cl_fin(obj);
 
