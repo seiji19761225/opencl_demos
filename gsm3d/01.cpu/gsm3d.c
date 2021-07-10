@@ -1,7 +1,7 @@
 /*
  * gsm3d.c: Gray-Scott Model Reaction Diffusion System (GS-RDS)
  * (c)2012-2016,2019 Seiji Nishimura
- * $Id: gsm3d.c,v 1.1.1.1 2020/07/29 00:00:00 seiji Exp seiji $
+ * $Id: gsm3d.c,v 1.1.1.2 2021/07/10 00:00:00 seiji Exp seiji $
  */
 
 #include <math.h>
@@ -134,7 +134,8 @@ int main(int argc, char **argv)
 /*----------------------------------------------------------------------*/
 void init_status(real_t *u, real_t *v)
 {				/* setup initial status.                */
-    int i, j, k, ii, jj, kk;
+    size_t i , j , k ;
+    int    ii, jj, kk;
 
     SRAND((int) time(NULL));	/* initialize RNG seed. */
 
@@ -185,7 +186,8 @@ void init_status(real_t *u, real_t *v)
 /*----------------------------------------------------------------------*/
 void update_status(real_t *u, real_t *v, real_t *p, real_t *q)
 {				/* update status.                       */
-    int t, ii, jj, kk;
+    int    t;
+    size_t ii, jj, kk;
 
 #pragma omp parallel private(t,ii,jj,kk)
     for (t = 0; t < TI; t++) {
@@ -233,8 +235,8 @@ void update_status(real_t *u, real_t *v, real_t *p, real_t *q)
 /*----------------------------------------------------------------------*/
 void draw_image(window_t *window, real_t *u, real_t *v)
 {				/* update graphics on the window.       */
-    int i, j;
-    int k = DEPTH / 2;
+    size_t i, j;
+    size_t k = DEPTH / 2;
 
 #pragma omp parallel for private(i,j) collapse(2)
     for (j = 0; j < HEIGHT; j++) {

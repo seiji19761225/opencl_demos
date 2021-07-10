@@ -1,7 +1,7 @@
 /*
  * gsm3d.c: Gray-Scott Model Reaction Diffusion System (GS-RDS)
  * (c)2012-2016,2019 Seiji Nishimura
- * $Id: gsm3d.c,v 1.1.1.1 2020/07/29 00:00:00 seiji Exp seiji $
+ * $Id: gsm3d.c,v 1.1.1.2 2021/07/10 00:00:00 seiji Exp seiji $
  */
 
 #include <time.h>
@@ -208,7 +208,8 @@ int main(int argc, char **argv)
 void init_status(cl_obj_t *obj, cl_mem dev_u, cl_mem dev_v)
 {				/* setup initial status.                */
     cl_command_queue queue = cl_query_queue(obj);
-    int i, j, k, ii, jj, kk;
+    size_t i , j , k ;
+    int    ii, jj, kk;
     real_t *u, *v;
 
     SRAND((int) time(NULL));	/* initialize RNG seed. */

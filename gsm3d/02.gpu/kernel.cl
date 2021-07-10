@@ -1,7 +1,7 @@
 /*
  * kernel.cl for gsm3d
  * (c)2019 Seiji Nishimura
- * $Id: kernel.cl,v 1.1.1.1 2020/07/29 00:00:00 seiji Exp seiji $
+ * $Id: kernel.cl,v 1.1.1.2 2021/07/10 00:00:00 seiji Exp seiji $
  */
 
 #ifdef USE_FLOAT
@@ -41,17 +41,17 @@ __kernel void fdm
 	 __global real_t *u, __global real_t *v,
 	 __global real_t *p, __global real_t *q, __local real_t *local_memory)
 {
-    int ii = get_global_id(0),
-	jj = get_global_id(1),
-	kk = get_global_id(2);
+    size_t ii = get_global_id(0),
+	   jj = get_global_id(1),
+	   kk = get_global_id(2);
 
     if (ii > width  - 1) ii -= width ;
     if (jj > height - 1) jj -= height;
     if (kk > depth  - 1) kk -= depth ;
 
-    int kp = kk + 1, km = kk - 1,
-	jp = jj + 1, jm = jj - 1,
-    	ip = ii + 1, im = ii - 1;
+    size_t kp = kk + 1, km = kk - 1,
+	   jp = jj + 1, jm = jj - 1,
+    	   ip = ii + 1, im = ii - 1;
 
     if (kp > depth  - 1) kp = 0;
     if (jp > height - 1) jp = 0;
@@ -61,20 +61,20 @@ __kernel void fdm
     if (im < 0) im = width  - 1;
 
     // local size
-    int lw = get_local_size(0),	// local width
-	lh = get_local_size(1),	// local height
-	ld = get_local_size(2);	// local depth
+    size_t lw = get_local_size(0),	// local width
+	   lh = get_local_size(1),	// local height
+	   ld = get_local_size(2);	// local depth
 
     __local real_t *a = &local_memory[0],
 		   *b = &local_memory[STRIDE2*STRIDE3*(ld+2)];
 
-    int xx = get_local_id(0) + 1,
-	yy = get_local_id(1) + 1,
-	zz = get_local_id(2) + 1;
+    size_t xx = get_local_id(0) + 1,
+	   yy = get_local_id(1) + 1,
+	   zz = get_local_id(2) + 1;
 
-    int zp = zz + 1, zm = zz - 1,
-	yp = yy + 1, ym = yy - 1,
-    	xp = xx + 1, xm = xx - 1;
+    size_t zp = zz + 1, zm = zz - 1,
+	   yp = yy + 1, ym = yy - 1,
+    	   xp = xx + 1, xm = xx - 1;
 
     real_t uu   = U(ii,jj,kk),
 	   vv   = V(ii,jj,kk);
@@ -137,18 +137,18 @@ __kernel void fdm
 	 __global real_t *u, __global real_t *v,
 	 __global real_t *p, __global real_t *q)
 {
-    int ii = get_global_id(0),
-	jj = get_global_id(1),
-	kk = get_global_id(2);
+    size_t ii = get_global_id(0),
+	   jj = get_global_id(1),
+	   kk = get_global_id(2);
 
     if (ii > width  - 1 ||
 	jj > height - 1 ||
 	kk > depth  - 1)
 	return;
 
-    int kp = kk + 1, km = kk - 1,
-	jp = jj + 1, jm = jj - 1,
-    	ip = ii + 1, im = ii - 1;
+    size_t kp = kk + 1, km = kk - 1,
+	   jp = jj + 1, jm = jj - 1,
+    	   ip = ii + 1, im = ii - 1;
 
     if (kp > depth  - 1) kp = 0;
     if (jp > height - 1) jp = 0;
@@ -181,9 +181,9 @@ __kernel void euler
 	(int width, int height, int depth, real_t dt,
 	 __global real_t *u, __global real_t *v, __global real_t *p, __global real_t *q)
 {
-    int i = get_global_id(0),
-	j = get_global_id(1),
-	k = get_global_id(2);
+    size_t i = get_global_id(0),
+	   j = get_global_id(1),
+	   k = get_global_id(2);
 
     if (i > width  - 1 ||
 	j > height - 1 ||
@@ -202,9 +202,9 @@ __kernel void update_image
 	 __constant real_t *m, __global real_t *u, __global real_t *v, __global uchar *image)
 #if SIZEOF_PIXEL_T == 4
 {
-    int i = get_global_id(0),
-	j = get_global_id(1),
-	k = depth / 2;
+    size_t i = get_global_id(0),
+	   j = get_global_id(1),
+	   k = depth / 2;
 
     if (i > width  - 1 ||
 	j > height - 1)
@@ -225,9 +225,9 @@ __kernel void update_image
 }
 #else				//......................................
 {
-    int i = get_global_id(0),
-	j = get_global_id(1),
-	k = depth / 2;
+    size_t i = get_global_id(0),
+	   j = get_global_id(1),
+	   k = depth / 2;
 
     if (i > width  - 1 ||
 	j > height - 1)
