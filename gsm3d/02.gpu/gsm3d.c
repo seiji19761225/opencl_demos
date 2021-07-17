@@ -1,7 +1,7 @@
 /*
  * gsm3d.c: Gray-Scott Model Reaction Diffusion System (GS-RDS)
  * (c)2012-2016,2019 Seiji Nishimura
- * $Id: gsm3d.c,v 1.1.1.2 2021/07/10 00:00:00 seiji Exp seiji $
+ * $Id: gsm3d.c,v 1.1.1.3 2021/07/17 00:00:00 seiji Exp seiji $
  */
 
 #include <time.h>
@@ -30,11 +30,11 @@ typedef double real_t;
 #define LD	(0x01<<2)
 #endif
 
-#define STRIDE0	(WIDTH )
-#define STRIDE1	(HEIGHT)
+#define STRIDE0	((size_t) (WIDTH ))
+#define STRIDE1	((size_t) (HEIGHT))
 #ifdef USE_LOCAL_MEMORY
-#define STRIDE2	(LW+2  )
-#define STRIDE3	(LH+2  )
+#define STRIDE2	((size_t) (LW+2  ))
+#define STRIDE3	((size_t) (LH+2  ))
 #endif
 
 /* window events */
@@ -208,8 +208,8 @@ int main(int argc, char **argv)
 void init_status(cl_obj_t *obj, cl_mem dev_u, cl_mem dev_v)
 {				/* setup initial status.                */
     cl_command_queue queue = cl_query_queue(obj);
-    size_t i , j , k ;
-    int    ii, jj, kk;
+    int i , j , k ;
+    int ii, jj, kk;
     real_t *u, *v;
 
     SRAND((int) time(NULL));	/* initialize RNG seed. */

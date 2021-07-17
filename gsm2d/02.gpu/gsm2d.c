@@ -1,7 +1,7 @@
 /*
  * gsm2d.c: Gray-Scott Model Reaction Diffusion System (GS-RDS)
  * (c)2012-2016,2019 Seiji Nishimura
- * $Id: gsm2d.c,v 1.1.1.1 2020/07/29 00:00:00 seiji Exp seiji $
+ * $Id: gsm2d.c,v 1.1.1.2 2021/07/17 00:00:00 seiji Exp seiji $
  */
 
 #include <time.h>
@@ -28,9 +28,9 @@ typedef double real_t;
 #define LH	(0x01<<4)
 #endif
 
-#define STRIDE0	(WIDTH)
+#define STRIDE0	((size_t) (WIDTH))
 #ifdef USE_LOCAL_MEMORY
-#define STRIDE1	(LW+2 )
+#define STRIDE1	((size_t) (LW+2 ))
 #endif
 
 /* window events */

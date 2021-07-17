@@ -1,7 +1,7 @@
 /*
  * gsm2d.c: Gray-Scott Model Reaction Diffusion System (GS-RDS)
  * (c)2012-2016,2019 Seiji Nishimura
- * $Id: gsm2d.c,v 1.1.1.1 2020/07/29 00:00:00 seiji Exp seiji $
+ * $Id: gsm2d.c,v 1.1.1.2 2021/07/17 00:00:00 seiji Exp seiji $
  */
 
 #include <math.h>
@@ -21,6 +21,8 @@ typedef double real_t;
 
 #define WIDTH	(0x01<<9)
 #define HEIGHT	(0x01<<9)
+
+#define STRIDE	((size_t) (WIDTH))
 
 /* window events */
 #define CONTINUE	(0x00)
@@ -58,10 +60,10 @@ typedef double real_t;
 #define MALLOC(n,t)	((t *) malloc((n)*sizeof(t)))
 
 /* 2D array */
-#define U(i,j)	u[(i)+(j)*WIDTH]
-#define V(i,j)	v[(i)+(j)*WIDTH]
-#define P(i,j)	p[(i)+(j)*WIDTH]
-#define Q(i,j)	q[(i)+(j)*WIDTH]
+#define U(i,j)	u[(i)+(j)*STRIDE]
+#define V(i,j)	v[(i)+(j)*STRIDE]
+#define P(i,j)	p[(i)+(j)*STRIDE]
+#define Q(i,j)	q[(i)+(j)*STRIDE]
 
 /* prototypes ----------------------------------------------------------*/
 void init_status  (real_t   *, real_t *);

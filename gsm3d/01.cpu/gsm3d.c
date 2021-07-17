@@ -1,7 +1,7 @@
 /*
  * gsm3d.c: Gray-Scott Model Reaction Diffusion System (GS-RDS)
  * (c)2012-2016,2019 Seiji Nishimura
- * $Id: gsm3d.c,v 1.1.1.2 2021/07/10 00:00:00 seiji Exp seiji $
+ * $Id: gsm3d.c,v 1.1.1.3 2021/07/17 00:00:00 seiji Exp seiji $
  */
 
 #include <math.h>
@@ -22,6 +22,9 @@ typedef double real_t;
 #define WIDTH	(0x01<<9)
 #define HEIGHT	(0x01<<9)
 #define DEPTH	(0x01<<6)
+
+#define STRIDE0	((size_t) (WIDTH ))
+#define STRIDE1	((size_t) (HEIGHT))
 
 /* window events */
 #define CONTINUE	(0x00)
@@ -59,10 +62,10 @@ typedef double real_t;
 #define MALLOC(n,t)	((t *) malloc((n)*sizeof(t)))
 
 /* 3D array */
-#define U(i,j,k)	u[(i)+((j)+(k)*HEIGHT)*WIDTH]
-#define V(i,j,k)	v[(i)+((j)+(k)*HEIGHT)*WIDTH]
-#define P(i,j,k)	p[(i)+((j)+(k)*HEIGHT)*WIDTH]
-#define Q(i,j,k)	q[(i)+((j)+(k)*HEIGHT)*WIDTH]
+#define U(i,j,k)	u[(i)+((j)+(k)*STRIDE1)*STRIDE0]
+#define V(i,j,k)	v[(i)+((j)+(k)*STRIDE1)*STRIDE0]
+#define P(i,j,k)	p[(i)+((j)+(k)*STRIDE1)*STRIDE0]
+#define Q(i,j,k)	q[(i)+((j)+(k)*STRIDE1)*STRIDE0]
 
 /* prototypes ----------------------------------------------------------*/
 void init_status  (real_t   *, real_t *);
@@ -134,8 +137,8 @@ int main(int argc, char **argv)
 /*----------------------------------------------------------------------*/
 void init_status(real_t *u, real_t *v)
 {				/* setup initial status.                */
-    size_t i , j , k ;
-    int    ii, jj, kk;
+    int i , j , k ;
+    int ii, jj, kk;
 
     SRAND((int) time(NULL));	/* initialize RNG seed. */
 
@@ -186,8 +189,8 @@ void init_status(real_t *u, real_t *v)
 /*----------------------------------------------------------------------*/
 void update_status(real_t *u, real_t *v, real_t *p, real_t *q)
 {				/* update status.                       */
-    int    t;
-    size_t ii, jj, kk;
+    int t;
+    int ii, jj, kk;
 
 #pragma omp parallel private(t,ii,jj,kk)
     for (t = 0; t < TI; t++) {
@@ -235,8 +238,8 @@ void update_status(real_t *u, real_t *v, real_t *p, real_t *q)
 /*----------------------------------------------------------------------*/
 void draw_image(window_t *window, real_t *u, real_t *v)
 {				/* update graphics on the window.       */
-    size_t i, j;
-    size_t k = DEPTH / 2;
+    int i, j;
+    int k = DEPTH / 2;
 
 #pragma omp parallel for private(i,j) collapse(2)
     for (j = 0; j < HEIGHT; j++) {

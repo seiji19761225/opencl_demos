@@ -1,7 +1,7 @@
 /*
  * kernel.cl for gsm2d
  * (c)2019 Seiji Nishimura
- * $Id: kernel.cl,v 1.1.1.1 2020/07/29 00:00:00 seiji Exp seiji $
+ * $Id: kernel.cl,v 1.1.1.2 2021/07/17 00:00:00 seiji Exp seiji $
  */
 
 #ifdef USE_FLOAT
@@ -15,9 +15,9 @@ typedef double3 real3_t;
 typedef double4 real4_t;
 #endif
 
-#define STRIDE0	(width)
+#define STRIDE0	((size_t) (width))
 #ifdef USE_LOCAL_MEMORY
-#define STRIDE1	(lw+2 )
+#define STRIDE1	((size_t) (lw+2 ))
 #endif
 
 // 2D array
@@ -34,8 +34,7 @@ typedef double4 real4_t;
 #ifdef USE_LOCAL_MEMORY
 __kernel void fdm
 	(int width, int height,
-	 real_t du, real_t  dv,
-	 real_t  f, real_t   k,
+	 real_t du, real_t dv, real_t f, real_t k,
 	 __global real_t *u, __global real_t *v,
 	 __global real_t *p, __global real_t *q, __local real_t *local_memory)
 {
@@ -45,13 +44,13 @@ __kernel void fdm
     if (ii > width  - 1) ii -= width ;
     if (jj > height - 1) jj -= height;
 
-    int jp = jj + 1, jm = jj - 1,
-    	ip = ii + 1, im = ii - 1;
+    int ip = ii + 1, im = ii - 1,
+	jp = jj + 1, jm = jj - 1;
 
-    if (jp > height - 1) jp = 0;
     if (ip > width  - 1) ip = 0;
-    if (jm < 0) jm = height - 1;
+    if (jp > height - 1) jp = 0;
     if (im < 0) im = width  - 1;
+    if (jm < 0) jm = height - 1;
 
     // local size
     int lw = get_local_size(0),	// local width
@@ -63,8 +62,8 @@ __kernel void fdm
     int xx = get_local_id(0) + 1,
 	yy = get_local_id(1) + 1;
 
-    int yp = yy + 1, ym = yy - 1,
-    	xp = xx + 1, xm = xx - 1;
+    int xp = xx + 1, xm = xx - 1,
+	yp = yy + 1, ym = yy - 1;
 
     real_t uu = U(ii,jj),
 	   vv = V(ii,jj);
@@ -95,23 +94,22 @@ __kernel void fdm
     // memory fence
     barrier(CLK_LOCAL_MEM_FENCE);
 
-    real_t uvv = uu * vv * vv;
+    real_t uvv  = uu * vv * vv;
 
-    P(ii,jj)   = du * (A(xp,yy) + A(xm,yy) +
-		       A(xx,yp) + A(xx,ym) - 4.0 * uu) -
-		uvv +  f * (1.0 - uu);
+    P(ii,jj) = du * (A(xp,yy) + A(xm,yy) +
+		     A(xx,yp) + A(xx,ym) - 4.0 * uu) -
+			       uvv +  f * (1.0 - uu);
 
-    Q(ii,jj)   = dv * (B(xp,yy) + B(xm,yy) +
-		       B(xx,yp) + B(xx,ym) - 4.0 * vv) +
-		uvv - (f + k)   * vv ;
+    Q(ii,jj) = dv * (B(xp,yy) + B(xm,yy) +
+		     B(xx,yp) + B(xx,ym) - 4.0 * vv) +
+			       uvv - (f + k)   * vv ;
 
     return;
 }
 #else				//......................................
 __kernel void fdm
 	(int width, int height,
-	 real_t du, real_t  dv,
-	 real_t  f, real_t   k,
+	 real_t du, real_t dv, real_t f, real_t k,
 	 __global real_t *u, __global real_t *v,
 	 __global real_t *p, __global real_t *q)
 {
@@ -122,26 +120,26 @@ __kernel void fdm
 	jj > height - 1)
 	return;
 
-    int jp = jj + 1, jm = jj - 1,
-    	ip = ii + 1, im = ii - 1;
+    int ip = ii + 1, im = ii - 1,
+	jp = jj + 1, jm = jj - 1;
 
-    if (jp > height - 1) jp = 0;
     if (ip > width  - 1) ip = 0;
-    if (jm < 0) jm = height - 1;
+    if (jp > height - 1) jp = 0;
     if (im < 0) im = width  - 1;
+    if (jm < 0) jm = height - 1;
 
-    real_t uu  = U(ii,jj),
-	   vv  = V(ii,jj);
+    real_t uu   = U(ii,jj),
+	   vv   = V(ii,jj);
 
-    real_t uvv = uu * vv * vv;
+    real_t uvv  = uu * vv * vv;
 
-    P(ii,jj)   = du * (U(ip,jj) + U(im,jj) +
-		       U(ii,jp) + U(ii,jm) - 4.0 * uu) -
-		uvv +  f * (1.0 - uu);
+    P(ii,jj) = du * (U(ip,jj) + U(im,jj) +
+		     U(ii,jp) + U(ii,jm) - 4.0 * uu) -
+			       uvv +  f * (1.0 - uu);
 
-    Q(ii,jj)   = dv * (V(ip,jj) + V(im,jj) +
-		       V(ii,jp) + V(ii,jm) - 4.0 * vv) +
-		uvv - (f + k)   * vv ;
+    Q(ii,jj) = dv * (V(ip,jj) + V(im,jj) +
+		     V(ii,jp) + V(ii,jm) - 4.0 * vv) +
+			       uvv - (f + k)   * vv ;
 
     return;
 }
