@@ -117,7 +117,7 @@ int main(int argc, char **argv)
     ;
 
     // initialize OpenCL
-    cl_init(obj, OPENCL_DEVICE, "./kernel.cl", option);
+    cl_init(obj, NULL, OPENCL_DEVICE, 0, "./kernel.cl", option);
     program = cl_query_program(obj);
     context = cl_query_context(obj);
     queue   = cl_query_queue  (obj);

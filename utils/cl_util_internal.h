@@ -1,6 +1,6 @@
 /*
- * cl_util_internal.h: utilities for OpenCL parallel processing
- * (c)2017 Seiji Nishimura
+ * cl_util_internal.h: OpenCL utility
+ * (c)2017-2021 Seiji Nishimura
  * $Id: cl_util_internal.h,v 1.1.1.1 2020/07/29 00:00:00 seiji Exp seiji $
  */
 
