@@ -1,7 +1,7 @@
 /*
  * sobel.c
  * (c)2019 Seiji Nishimura
- * $Id: sobel.c,v 1.1.1.1 2020/07/30 00:00:00 seiji Exp seiji $
+ * $Id: sobel.c,v 1.1.1.2 2021/07/18 00:00:00 seiji Exp seiji $
  */
 
 #include <wtime.h>

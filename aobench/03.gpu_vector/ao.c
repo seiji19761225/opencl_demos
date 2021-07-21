@@ -1,7 +1,7 @@
 /*
  * ao.c: aobench is originally written by Syoyo Fujita.
  * (c)2019 Seiji Nishimura
- * $Id: ao.c,v 1.1.1.4 2021/07/10 00:00:00 seiji Exp seiji $
+ * $Id: ao.c,v 1.1.1.5 2021/07/18 00:00:00 seiji Exp seiji $
  */
 
 #include <stdio.h>

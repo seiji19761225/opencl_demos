@@ -1,7 +1,7 @@
 /*
  * gsm2d.c: Gray-Scott Model Reaction Diffusion System (GS-RDS)
  * (c)2012-2016,2019 Seiji Nishimura
- * $Id: gsm2d.c,v 1.1.1.2 2021/07/17 00:00:00 seiji Exp seiji $
+ * $Id: gsm2d.c,v 1.1.1.3 2021/07/18 00:00:00 seiji Exp seiji $
  */
 
 #include <time.h>
